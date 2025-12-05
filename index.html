@@ -1,0 +1,191 @@
+    <!doctype html>
+    <html lang="zh-Hant">
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>陳亭頤 — 個人簡歷</title>
+        <style>
+          :root{--accent:#3b82f6;--muted:#6b7280;--bg:#f8fafc}
+          *{box-sizing:border-box}
+          html{scroll-behavior:smooth}
+          body{font-family:Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif;margin:0;background:var(--bg);color:#111}
+          header{background:#fff;border-bottom:1px solid #e6e9ee;position:sticky;top:0;z-index:20}
+          .container{max-width:980px;margin:0 auto;padding:24px}
+          nav{display:flex;align-items:center;justify-content:space-between}
+          .nav-links a{margin-left:16px;color:var(--muted);text-decoration:none}
+          .hero{display:flex;gap:24px;align-items:center;padding:28px 0}
+          .profile{display:flex;gap:18px;align-items:center}
+          .avatar{width:110px;height:110px;border-radius:12px;overflow:hidden;flex:0 0 110px;transition:transform .25s ease}
+          .avatar img{width:100%;height:100%;object-fit:cover;display:block}
+          .avatar:hover{transform:scale(1.06)}
+          h1{margin:0;font-size:1.6rem}
+          .lead{color:var(--muted);margin-top:6px}
+
+          /* sections */
+          section{background:#fff;margin:16px 0;padding:18px;border-radius:10px;box-shadow:0 1px 2px rgba(16,24,40,.03)}
+          .skills .skill{margin-bottom:12px}
+          .skill .label{display:flex;justify-content:space-between;font-size:.95rem;margin-bottom:6px}
+          .progress{height:12px;background:#eef2ff;border-radius:999px;overflow:hidden}
+          .bar{height:100%;background:linear-gradient(90deg,var(--accent),#60a5fa);width:0;transition:width 1s ease}
+
+          /* timeline */
+          .timeline{position:relative;padding-left:18px}
+          .timeline::before{content:'';position:absolute;left:6px;top:0;bottom:0;width:2px;background:#e6e9ee;border-radius:2px}
+          .entry{position:relative;padding:10px 12px;margin-bottom:14px}
+          .entry::before{content:'';position:absolute;left:-3px;width:12px;height:12px;border-radius:50%;background:#fff;border:3px solid var(--accent);top:12px}
+          .entry .date{font-size:.85rem;color:var(--muted)}
+
+          /* projects */
+          .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+          .card{background:#fff;border-radius:8px;padding:12px;border:1px solid #eef2f6;transition:transform .2s ease,box-shadow .2s ease}
+          .card:hover{transform:translateY(-6px);box-shadow:0 10px 20px rgba(16,24,40,.08)}
+          .card img{width:100%;height:140px;object-fit:cover;object-position:center center;display:block;border-radius:6px;margin-bottom:8px}
+          /* project-specific image sizing: keep aspect ratio for symmetric display */
+          .project-img{aspect-ratio:16/9;height:auto}
+
+          /* contact */
+          .contacts a{display:inline-block;margin-right:8px;color:var(--accent);text-decoration:none}
+
+          /* responsive */
+          @media (max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}}
+          @media (max-width:600px){
+            .hero{flex-direction:column;align-items:flex-start}
+            .grid{grid-template-columns:1fr}
+            .nav-links a{margin-left:10px}
+            .container{padding:14px}
+          }
+        </style>
+      </head>
+      <body>
+        <header>
+          <div class="container">
+            <nav>
+              <div style="font-weight:600">陳亭頤 — 簡歷</div>
+              <div class="nav-links">
+                <a href="#skills">Skills</a>
+                <a href="#experience">Experience</a>
+                <a href="#projects">Projects</a>
+                <a href="#contact">Contact</a>
+              </div>
+            </nav>
+          </div>
+        </header>
+
+        <main class="container">
+          <section class="hero" id="home">
+            <div class="profile">
+                <div class="avatar" title="示意照片">
+                <img src="assets/2.jpg" alt="profile">
+              </div>
+              <div>
+                <h1>陳亭頤</h1>
+                <div style="margin-top:10px" class="contacts">
+                  <div><strong>Email:</strong> <a href="mailto:tingyichen95@gmail.com">tingyichen95@gmail.com</a></div>
+                  <div><strong>Phone:</strong> <a href="tel:0909795140">0909-795-140</a></div>
+                  <div><strong>IG:</strong> <a href="https://www.instagram.com/tingyi_926" target="_blank" rel="noopener">@tingyi_926</a></div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="skills" class="skills">
+            <h2>技能展示</h2>
+            <div class="skill">
+              <div class="label"><span>快速解決問題</span><span>75%</span></div>
+              <div class="progress"><div class="bar" data-width="75%"></div></div>
+            </div>
+            <div class="skill">
+              <div class="label"><span>團隊合作</span><span>85%</span></div>
+              <div class="progress"><div class="bar" data-width="85%"></div></div>
+            </div>
+            <div class="skill">
+              <div class="label"><span>責任心</span><span>85%</span></div>
+              <div class="progress"><div class="bar" data-width="85%"></div></div>
+            </div>
+          </section>
+
+          <section id="experience">
+            <h2>工作／經歷時間軸</h2>
+            <div class="timeline">
+                <div class="entry">
+                  <div class="date">國中（2020 — 2023）</div>
+                  <div class="title">擔任學藝股長</div>
+                  <div class="desc">負責佈置教室並每日填寫教室日誌，學到文書處理與活動策劃能力。</div>
+                </div>
+
+                <div class="entry">
+                  <div class="date">高中（2023 — 2025）</div>
+                  <div class="title">成為熱舞社團員</div>
+                  <div class="desc">學習 HIP‑HOP 並參與多場活動。</div>
+                </div>
+              </div>
+          </section>
+
+          <section id="projects">
+            <h2>專案作品集</h2>
+            <div class="grid">
+              <article class="card">
+                <a href="assets/project1.png" target="_blank" rel="noopener">
+                  <img class="project-img" src="assets/project1.png" alt="自然探究" onerror="this.onerror=null;this.src='https://via.placeholder.com/600x400.png?text=No+Image'">
+                </a>
+                <h3>自然探究</h3>
+                <p>簡介：使用陀螺並探討它可以利用那些因素使陀螺轉更久。</p>
+              </article>
+
+              <article class="card">
+                <img src="assets/project2.jpg" alt="社團活動視覺整合">
+                <h3>社團活動視覺整合</h3>
+                <p>簡介：參與社團活動到棒球場上表演。</p>
+              </article>
+
+              <article class="card">
+                <img src="assets/1.jpg" alt="課堂網頁作業">
+                <h3>課堂網頁作業</h3>
+                <p>簡介：課堂練習的程式設計</p>
+              </article>
+            </div>
+          </section>
+
+          <section id="contact">
+            <h2>聯絡方式</h2>
+            <p>如需進一步聯絡，歡迎透過以下方式：</p>
+            <p><strong>Email:</strong> <a href="mailto:tingyichen95@gmail.com">tingyichen95@gmail.com</a></p>
+            <p><strong>Phone:</strong> <a href="tel:0909795140">0909-795-140</a></p>
+            <p><strong>IG:</strong> <a href="https://www.instagram.com/tingyi_926" target="_blank" rel="noopener">@tingyi_926</a></p>
+          </section>
+
+        </main>
+
+        <script>
+          // 進度條在進入視窗時填滿
+          const bars = document.querySelectorAll('.bar');
+          const obs = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+              if(entry.isIntersecting){
+                const bar = entry.target;
+                const w = bar.getAttribute('data-width') || '60%';
+                bar.style.width = w;
+                obs.unobserve(bar);
+              }
+            })
+          },{threshold:0.25});
+          bars.forEach(b=>obs.observe(b));
+
+          // 平滑錨點修正（如果 header 高度固定，可用 offset）
+          document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+              const hash = a.getAttribute('href');
+              if(hash.length>1){
+                const el = document.querySelector(hash);
+                if(el){
+                  e.preventDefault();
+                  const y = el.getBoundingClientRect().top + window.pageYOffset - (document.querySelector('header')?.offsetHeight || 0) - 8;
+                  window.scrollTo({top:y,behavior:'smooth'});
+                  history.replaceState(null,'',hash);
+                }
+              }
+            })
+          })
+        </script>
+      </body>
+    </html>
