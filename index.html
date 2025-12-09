@@ -54,6 +54,17 @@
             .nav-links a{margin-left:10px}
             .container{padding:14px}
           }
+
+          /* image overlay for in-page enlarge */
+          .img-overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.65);opacity:0;pointer-events:none;transition:opacity .28s ease;z-index:80}
+          .img-overlay.open{opacity:1;pointer-events:auto}
+          .img-overlay .frame{max-width:94%;max-height:90%;display:flex;flex-direction:column;align-items:center;gap:12px;transform:scale(.96);transition:transform .32s cubic-bezier(.2,.9,.2,1)}
+          .img-overlay.open .frame{transform:scale(1)}
+          .img-overlay img{max-width:100%;max-height:80vh;border-radius:8px;box-shadow:0 30px 60px rgba(0,0,0,.6);display:block}
+          .img-caption{color:#fff;font-size:.95rem;opacity:.95;text-align:center}
+          .img-close{position:absolute;top:18px;right:18px;background:rgba(0,0,0,.45);color:#fff;border:0;border-radius:8px;padding:6px 10px;cursor:pointer;font-weight:700}
+          /* disable pointer cursor on images to indicate normal behaviour */
+          img{cursor:default}
         </style>
       </head>
       <body>
@@ -131,9 +142,7 @@
             <h2>專案作品集</h2>
             <div class="grid">
               <article class="card">
-                <a href="assets/project1.png" target="_blank" rel="noopener">
                   <img class="project-img" src="assets/project1.png" alt="自然探究" onerror="this.onerror=null;this.src='https://via.placeholder.com/600x400.png?text=No+Image'">
-                </a>
                 <h3>自然探究</h3>
                 <p>簡介：使用陀螺並探討它可以利用那些因素使陀螺轉更久。</p>
               </article>
@@ -162,6 +171,15 @@
 
         </main>
 
+        <!-- image overlay for in-page enlarge -->
+        <div id="img-overlay" class="img-overlay" aria-hidden="true" role="dialog">
+          <div class="frame" role="document">
+            <button id="img-close" class="img-close" aria-label="關閉">✕</button>
+            <img id="img-large" src="" alt="">
+            <div id="img-caption" class="img-caption" aria-hidden="false"></div>
+          </div>
+        </div>
+
         <script>
           // 進度條在進入視窗時填滿
           const bars = document.querySelectorAll('.bar');
@@ -175,23 +193,99 @@
               }
             })
           },{threshold:0.25});
-          bars.forEach(b=>obs.observe(b));
+          if(bars && typeof bars.forEach === 'function'){
+            bars.forEach(b=>obs.observe(b));
+          } else if (bars && bars.length){
+            for(var i=0;i<bars.length;i++) obs.observe(bars[i]);
+          }
 
           // 平滑錨點修正（如果 header 高度固定，可用 offset）
-          document.querySelectorAll('a[href^="#"]').forEach(a => {
-            a.addEventListener('click', e => {
-              const hash = a.getAttribute('href');
-              if(hash.length>1){
-                const el = document.querySelector(hash);
-                if(el){
-                  e.preventDefault();
-                  const y = el.getBoundingClientRect().top + window.pageYOffset - (document.querySelector('header')?.offsetHeight || 0) - 8;
-                  window.scrollTo({top:y,behavior:'smooth'});
-                  history.replaceState(null,'',hash);
+          (function(){
+            const anchors = document.querySelectorAll('a[href^="#"]');
+            function bindAnchor(a){
+              a.addEventListener('click', function(e){
+                const hash = a.getAttribute('href');
+                if(hash.length>1){
+                  const el = document.querySelector(hash);
+                  if(el){
+                    e.preventDefault();
+                    const y = el.getBoundingClientRect().top + window.pageYOffset - (document.querySelector('header')?.offsetHeight || 0) - 8;
+                    window.scrollTo({top:y,behavior:'smooth'});
+                    history.replaceState(null,'',hash);
+                  }
                 }
+              });
+            }
+            if(anchors && typeof anchors.forEach === 'function'){
+              anchors.forEach(bindAnchor);
+            } else if(anchors && anchors.length){
+              for(var i=0;i<anchors.length;i++) bindAnchor(anchors[i]);
+            }
+          })();
+
+          // image overlay script: enable in-page enlarge for project images
+          (function(){
+            const overlay = document.getElementById('img-overlay');
+            const largeImg = document.getElementById('img-large');
+            const captionEl = document.getElementById('img-caption');
+            const closeBtn = document.getElementById('img-close');
+            const projects = document.getElementById('projects');
+            let lastFocus = null;
+
+            function open(src, alt, caption){
+              lastFocus = document.activeElement;
+              largeImg.src = src;
+              largeImg.alt = alt || '';
+              captionEl.textContent = caption || '';
+              overlay.classList.add('open');
+              overlay.setAttribute('aria-hidden','false');
+              document.body.style.overflow = 'hidden';
+              closeBtn.focus();
+            }
+
+            function close(){
+              overlay.classList.remove('open');
+              overlay.setAttribute('aria-hidden','true');
+              document.body.style.overflow = '';
+              // clear src after animation ends to free memory
+              setTimeout(()=>{ largeImg.src = ''; }, 350);
+              if(lastFocus && typeof lastFocus.focus === 'function') lastFocus.focus();
+            }
+
+            // Use event delegation: clicks inside #projects
+            try{
+              if(projects){
+                projects.addEventListener('click', function(e){
+                  // robust img detection: handle text nodes and nested elements
+                  let img = null;
+                  try{ img = e.target && e.target.closest ? e.target.closest('img') : null; }catch(_){ img = null; }
+                  if(!img){
+                    // fallback: if target itself is an IMG element
+                    if(e.target && e.target.tagName === 'IMG') img = e.target;
+                  }
+                  if(!img) return;
+                  // Only target images that are in the projects grid (avoid other imgs)
+                  if(!projects.contains(img)) return;
+                  console.log('[img-overlay] clicked image:', img.src);
+                  // prevent any ancestor link default behaviour
+                  if(e && typeof e.preventDefault === 'function') e.preventDefault();
+                  const src = img.getAttribute('data-full') || img.src;
+                  const alt = img.alt || '';
+                  const caption = img.getAttribute('data-caption') || alt || '';
+                  open(src, alt, caption);
+                });
+              } else {
+                console.warn('[img-overlay] #projects element not found');
               }
-            })
-          })
+            }catch(err){
+              console.error('[img-overlay] setup error', err);
+            }
+
+            // Close handlers
+            closeBtn.addEventListener('click', close);
+            overlay.addEventListener('click', e=>{ if(e.target === overlay) close(); });
+            document.addEventListener('keydown', e=>{ if(e.key === 'Escape' && overlay.classList.contains('open')) close(); });
+          })();
         </script>
       </body>
     </html>
